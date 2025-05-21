@@ -30,7 +30,7 @@ import numpy as np
 model = YOLO('yolov8n.pt')  # or 'yolov5s.pt' depending on model availability
 
 # Read image
-image = cv2.imread("/Users/melodywang/Desktop/Over-AI-nalyzer/output.jpg")
+image = cv2.imread("/Users/jinrongs/Desktop/Over-AI-nalyzer/output.jpg")
 
 # Run inference
 results = model(image)
@@ -62,7 +62,7 @@ def average_color(image):
 
 for obj_img, label, conf in objects:
     avg_color = average_color(obj_img)
-    print(f'Object: {label}, Confidence: {conf:.2f}, Avg BGR color: {avg_color}')
+    print(f"Object: {label}, Confidence: {conf:.2f}, Avg BGR color: {avg_color} ")
 
 
 
