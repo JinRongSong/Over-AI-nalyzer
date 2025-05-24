@@ -26,6 +26,10 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 
+
+
+CONF_THRESH = 0.3
+
 # Load a pretrained YOLOv5 model
 model = YOLO('yolov8n.pt')  # or 'yolov5s.pt' depending on model availability
 
@@ -50,7 +54,8 @@ objects = []
 for box, cls_id, conf in zip(boxes, class_ids, confidences):
     xmin, ymin, xmax, ymax = map(int, box)
     cropped_obj = image[ymin:ymax, xmin:xmax]
-    objects.append((cropped_obj, class_names[cls_id], conf))
+    if conf > CONF_THRESH:
+        objects.append((cropped_obj, class_names[cls_id], conf))
 
 
 
