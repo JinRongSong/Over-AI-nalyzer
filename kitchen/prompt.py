@@ -1,9 +1,11 @@
 import os
 import random
 import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
+client = OpenAI()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -25,11 +27,11 @@ def build_prompt(detected_objects):
     style = random.choice(STYLES)
 
     # Convert object list to readable sentence
-    if not detected_objects:
-        object_summary = "an unrecognizable blur of existential ambiguity"
-    else:
-        object_summary = ", ".join([f"a {label} ({conf:.0%} sure)" for label, conf in detected_objects])
-
+   # if not detected_objects:
+      #  object_summary = "an unrecognizable blur of existential ambiguity"
+   # else:
+      #  object_summary = ", ".join([f"a {label} ({conf:.0%} sure)" for label, conf in detected_objects])
+    object_summary = " ".join(detected_objects)
     return (
         f"You are {style}. You have been shown a photo that contains: {object_summary}.\n\n"
         "Write an absurdly deep, overly confident psychological analysis of the person who took this selfie or food photo. "
@@ -44,15 +46,14 @@ def generate_analysis(detected_objects):
     prompt = build_prompt(detected_objects)
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Or "gpt-3.5-turbo" if GPT-4 is not needed
-            messages=[
-                {"role": "system", "content": "You are a flamboyant and highly imaginative psychoanalyst."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.95,
-            max_tokens=400
+        response = openai.responses.create(
+            model="gpt-4.1",  # Or "gpt-3.5-turbo" if GPT-4 is not needed
+            input = "You are a flamboyant and highly imaginative psychoanalyst" + prompt,
+            temperature=0.95
+            #max_tokens=400
         )
-        return response['choices'][0]['message']['content']
+        return response.output_text
     except Exception as e:
         return f"Error generating analysis: {e}"
+
+print(generate_analysis(["cat", "chair", "dining table","chair", "potted plant", "teddy bear", "cake"]))
